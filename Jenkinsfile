@@ -45,7 +45,7 @@ pipeline {
 
                     // Set Docker image tags
                     def imageName = "${DOCKER_REPO}:${commitHash}"  // Tag by commit hash
-                    def imageTag = "${DOCKER_REPO}:${env.BRANCH_NAME}"  // Tag by branch name
+                    def imageTag = "${env.BRANCH_NAME}"  // Tag by branch name
 
                     // Build the Docker image with two tags (commit hash and branch name)
                     echo "Building Docker image with tags: ${imageName}, ${imageTag}"
@@ -67,7 +67,7 @@ pipeline {
                     def branchName = env.BRANCH_NAME ?: 'unknown'
 
                     def imageName = "${DOCKER_REPO}:${commitHash}"
-                    def imageTag = "${DOCKER_REPO}:${branchName}"
+                    def imageTag = "${branchName}"
 
                     // Push the images to Docker Hub
                     echo "Pushing Docker images to Docker Hub with tags: ${imageName}, ${imageTag}"
