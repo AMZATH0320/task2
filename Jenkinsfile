@@ -22,9 +22,20 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Debugging: Ensure we are in the correct directory
+                    echo "Building Docker image..."
+                    echo "Current Workspace: ${pwd()}"
+
+                    // Check if Docker is available on the Jenkins agent
+                    sh 'docker --version'
+
                     // Extract commit hash and branch name
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     def branchName = env.BRANCH_NAME
+
+                    // Debugging: Print commit hash and branch name
+                    echo "Commit Hash: ${commitHash}"
+                    echo "Branch Name: ${branchName}"
 
                     // Build the Docker image and tag it with commit hash and branch name
                     def imageName = "${DOCKER_REPO}:${commitHash}"
