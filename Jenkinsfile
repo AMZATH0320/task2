@@ -1,5 +1,9 @@
 pipeline {
-    agent any                  
+    agent any      
+
+    parameters {
+        // Define a parameter for the branch name
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')            
 
     environment {
          DOCKER_REPO = 'amzath0304/task'    
@@ -10,7 +14,7 @@ pipeline {
             steps {
                 script {
                      // Debugging: Print branch name and current directory
-                    echo "Branch Name: ${env.BRANCH_NAME}"
+                    echo "Branch Name: ${params.BRANCH_NAME}"
                     echo "Current Workspace: ${pwd()}"
                     // Clone the GitHub repository
                     git branch: "${env.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
@@ -38,7 +42,7 @@ pipeline {
 
                     // Extract commit hash and branch name
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    def branchName = env.BRANCH_NAME
+                    def branchName = params.BRANCH_NAME ?: 'unknown'  // Use 'unknown' if BRANCH_NAME is null
 
                     // Debugging: Print commit hash and branch name
                     echo "Commit Hash: ${commitHash}"
