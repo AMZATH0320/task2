@@ -49,7 +49,8 @@ pipeline {
 
                     // Build the Docker image with two tags (commit hash and branch name)
                     echo "Building Docker image with tags: ${imageName}, ${imageTag}"
-                    sh "sudo docker build -t ${imageName} -t ${imageTag} ."
+                    sh "sudo docker build -t ${imageName}-${imageTag} ."
+
 
                     
 
@@ -70,8 +71,7 @@ pipeline {
 
                     // Push the images to Docker Hub
                     echo "Pushing Docker images to Docker Hub with tags: ${imageName}, ${imageTag}"
-                    sh "sudo docker push ${imageName}"
-                    sh "sudo docker push ${imageTag}"
+                    sh "sudo docker push ${imageName}-${imageTag}"
                 }
             }
         }
