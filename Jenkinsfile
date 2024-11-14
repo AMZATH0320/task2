@@ -1,15 +1,15 @@
 pipeline {
-    agent any                  # im selecting slave node labeled as Docker_node
+    agent any                  
 
     environment {
          version = "${GIT_COMMIT_HASH}-${GIT_BRANCH_NAME}"
-         docker_image ="amzath0304/task:${GIT_COMMIT_HASH}-${GIT_BRANCH_NAME}"     #amzath0304 is Dockerhub_username/task is image_name
+         docker_image ="amzath0304/task:${GIT_COMMIT_HASH}-${GIT_BRANCH_NAME}"     
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'      # GitHub Public Repository
+                git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'      
             }
         }
 
