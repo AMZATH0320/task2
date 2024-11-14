@@ -1,12 +1,7 @@
 pipeline {
     agent any      
 
-    parameters {
-        // Deefine a parameter for the branch nameeeee
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
-    }
-                    
-
+    
     environment {
          DOCKER_REPO = 'amzath0304/task'    
     }
@@ -15,11 +10,10 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                     // Debugging: Print branch name and current directory
-                    echo "Branch Name: ${params.BRANCH_NAME}"
+                    
                     echo "Current Workspace: ${pwd()}"
                     // Clonei the GitHub repository
-                    git branch: "${params.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
+                    git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'
                 }
             }    
         }
@@ -34,27 +28,32 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Debugging: Ensure we are in the correct directory
-                    echo "Building Docker image..."
-                    echo "Current Workspace: ${pwd()}"
+                   // Get the branch name of the latest commit
+                    def branchName = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
 
-                    // Check if Docker is available on the Jenkins agent
-                    sh 'docker --version'
+                    // Output the branch name
+                    echo "Branch Name of Latest Commit: ${branchName}"
 
-                    // Extract commit hash and branch name
+                    // If branchName is null or empty, set to 'unknown'
+                    branchName = branchName ?: 'unknown'
+
+                    // Store the branch name for later use
+                    env.BRANCH_NAME = branchName
+
+                     // Get the latest commit hash
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    def branchName = params.BRANCH_NAME ?: 'unknown'  // Use 'unknown' if BRANCH_NAME is null
 
-                    // Debugging: Print commit hash and branch name
-                    echo "Commit Hash: ${commitHash}"
-                    echo "Branch Name: ${branchName}"
+                    // Set Docker image tags
+                    def imageName = "${DOCKER_REPO}:${commitHash}"  // Tag by commit hash
+                    def imageTag = "${DOCKER_REPO}:${env.BRANCH_NAME}"  // Tag by branch name
 
-                    // Build the Docker image and tag it with commit hash and branch name
-                    def imageName = "${DOCKER_REPO}:${commitHash}"
-                    def imageTag = "${DOCKER_REPO}:${branchName}"
-
-                    // Build the Docker image
+                    // Build the Docker image with two tags (commit hash and branch name)
+                    echo "Building Docker image with tags: ${imageName}, ${imageTag}"
                     sh "docker build -t ${imageName} -t ${imageTag} ."
+
+                    
+
+                   
                 }  
             }
         }
@@ -62,13 +61,15 @@ pipeline {
         stage('Push docker image') {
             steps {
                 script {
-                    // Push the image to Docker Hub with both commit hash and branch tag
+                    // Get the latest commit hash and branch name again
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    def branchName = env.BRANCH_NAME
+                    def branchName = env.BRANCH_NAME ?: 'unknown'
+
                     def imageName = "${DOCKER_REPO}:${commitHash}"
                     def imageTag = "${DOCKER_REPO}:${branchName}"
-                    
-                    // Push the images
+
+                    // Push the images to Docker Hub
+                    echo "Pushing Docker images to Docker Hub with tags: ${imageName}, ${imageTag}"
                     sh "docker push ${imageName}"
                     sh "docker push ${imageTag}"
                 }
