@@ -2,8 +2,8 @@ pipeline {
     agent any                  
 
     environment {
-         version ="${GIT_COMMIT_HASH}-${GIT_BRANCH_NAME}"
-         docker_image ="amzath0304/task:${GIT_COMMIT_HASH}-${GIT_BRANCH_NAME}"     
+         version = "${env.GIT_COMMIT_HASH}-${env.GIT_BRANCH_NAME}"
+         docker_image = "amzath0304/task:${env.GIT_COMMIT_HASH}-${env.GIT_BRANCH_NAME}"     
     }
 
     stages {
