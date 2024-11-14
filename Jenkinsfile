@@ -2,8 +2,7 @@ pipeline {
     agent any                  
 
     environment {
-         version = "${env.GIT_COMMIT_HASH}-${env.GIT_BRANCH_NAME}"
-         docker_image = "amzath0304/task:${env.GIT_COMMIT_HASH}-${env.GIT_BRANCH_NAME}"     
+         DOCKER_REPO = 'amzath0304/task'    
     }
 
     stages {
@@ -23,8 +22,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerfilepath = '.'
-                    sh "sudo docker build -t 'amzath0304/task:${version}' ."
+                    // Extract commit hash and branch name
+                    def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    def branchName = env.BRANCH_NAME
+
+                    // Build the Docker image and tag it with commit hash and branch name
+                    def imageName = "${DOCKER_REPO}:${commitHash}"
+                    def imageTag = "${DOCKER_REPO}:${branchName}"
                 }  
             }
         }
@@ -32,7 +36,15 @@ pipeline {
         stage('Push docker image') {
             steps {
                 script {
-                    sh "sudo docker push 'amzath0304/task:${version}'"
+                    // Push the image to Docker Hub with both commit hash and branch tag
+                    def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    def branchName = env.BRANCH_NAME
+                    def imageName = "${DOCKER_REPO}:${commitHash}"
+                    def imageTag = "${DOCKER_REPO}:${branchName}"
+                    
+                    // Push the images
+                    sh "docker push ${imageName}"
+                    sh "docker push ${imageTag}"
                 }
             }
         }
@@ -40,7 +52,8 @@ pipeline {
         stage('Cleanup Docker Images') {
             steps {
                 script {
-                    sh "sudo docker rmi -f ${env.docker_image}"
+                    // Clean up Docker images and unused resources after pushing
+                    sh 'docker system prune -af'
                 }
             }
         }
