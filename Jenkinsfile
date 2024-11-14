@@ -2,7 +2,7 @@ pipeline {
     agent any      
 
     parameters {
-        // Define a parameter for the branch nameeeee
+        // Deefine a parameter for the branch nameeeee
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')            
 
     environment {
