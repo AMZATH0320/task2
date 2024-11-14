@@ -2,7 +2,7 @@ pipeline {
     agent any      
 
     parameters {
-        // Define a parameter for the branch name
+        // Define a parameter for the branch nameeeee
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')            
 
     environment {
@@ -16,7 +16,7 @@ pipeline {
                      // Debugging: Print branch name and current directory
                     echo "Branch Name: ${params.BRANCH_NAME}"
                     echo "Current Workspace: ${pwd()}"
-                    // Clone the GitHub repository
+                    // Clonei the GitHub repository
                     git branch: "${env.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
                 }
                 }    
