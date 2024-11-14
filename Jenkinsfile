@@ -21,8 +21,7 @@ pipeline {
                     // Clonei the GitHub repository
                     git branch: "${env.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
                 }
-                }    
-            }
+            }    
         }
 
         stage('Login to Dockerhub') {
@@ -84,4 +83,5 @@ pipeline {
                 }
             }
         }
+    }
  }
