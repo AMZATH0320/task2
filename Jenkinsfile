@@ -19,7 +19,7 @@ pipeline {
                     echo "Branch Name: ${params.BRANCH_NAME}"
                     echo "Current Workspace: ${pwd()}"
                     // Clonei the GitHub repository
-                    git branch: "${env.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
+                    git branch: "${params.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
                 }
             }    
         }
