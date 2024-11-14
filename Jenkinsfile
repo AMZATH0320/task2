@@ -29,6 +29,9 @@ pipeline {
                     // Build the Docker image and tag it with commit hash and branch name
                     def imageName = "${DOCKER_REPO}:${commitHash}"
                     def imageTag = "${DOCKER_REPO}:${branchName}"
+
+                    // Build the Docker image
+                    sh "docker build -t ${imageName} -t ${imageTag} ."
                 }  
             }
         }
