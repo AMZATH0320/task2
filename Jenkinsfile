@@ -8,7 +8,14 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'      
+                script {
+                     // Debugging: Print branch name and current directory
+                    echo "Branch Name: ${env.BRANCH_NAME}"
+                    echo "Current Workspace: ${pwd()}"
+                    // Clone the GitHub repository
+                    git branch: "${env.BRANCH_NAME}", url: 'https://github.com/AMZATH0320/task.git'
+                }
+                }    
             }
         }
 
