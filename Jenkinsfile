@@ -70,8 +70,8 @@ pipeline {
 
                     // Push the images to Docker Hub
                     echo "Pushing Docker images to Docker Hub with tags: ${imageName}, ${imageTag}"
-                    sh "docker push ${imageName}"
-                    sh "docker push ${imageTag}"
+                    sh "sudo docker push ${imageName}"
+                    sh "sudo docker push ${imageTag}"
                 }
             }
         }
@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     // Clean up Docker images and unused resources after pushing
-                    sh 'docker system prune -af'
+                    sh 'sudo docker system prune -af'
                 }
             }
         }
