@@ -3,7 +3,9 @@ pipeline {
 
     parameters {
         // Deefine a parameter for the branch nameeeee
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')            
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
+    }
+                    
 
     environment {
          DOCKER_REPO = 'amzath0304/task'    
@@ -82,6 +84,4 @@ pipeline {
                 }
             }
         }
-
-    }
  }
