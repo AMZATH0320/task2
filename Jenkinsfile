@@ -32,6 +32,7 @@ pipeline {
             steps {
                 script {   
                     // Build the Docker image with two tags (commit hash and branch name)
+                    sh "echo ${docker_image}"
                     sh "sudo docker build -t ${docker_image} ."       
                 }  
             }
