@@ -1,23 +1,19 @@
 pipeline {
     
-    //label here slave node_id 
     agent any      
     
     environment {
-         DOCKER_REPO = 'amzath0304/task' 
-         commitHash = "sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()"
-         branchName = "sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()"
-         docker_image = ${DOCKER_REPO}:${commitHash}-${branchName}
-
-         
+        DOCKER_REPO = 'amzath0304/task' 
+        commitHash = "sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()"
+        branchName = "sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()"
+        docker_image = ${DOCKER_REPO}:${commitHash}-${branchName}
 
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                script {
-                    
+                script { 
                     echo "Current Workspace: ${pwd()}"
                     // Clone the GitHub repository to user AMZATH0320 Public repo
                     git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'
@@ -34,13 +30,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                  
-                   
+                script {   
                     // Build the Docker image with two tags (commit hash and branch name)
-                    sh "sudo docker build -t ${docker_image} ."
-                    
-                   
+                    sh "sudo docker build -t ${docker_image} ."       
                 }  
             }
         }
