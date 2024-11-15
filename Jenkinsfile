@@ -4,10 +4,7 @@ pipeline {
     
     environment {
         DOCKER_REPO = 'amzath0304/task' 
-        commitHash = "sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()"
-        branchName = "sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()"
-        imagetag = "${commitHash}-${branchName}"
-        docker_image = "amzath0304/task:${imagetag}"
+       
 
     }
 
@@ -32,8 +29,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {   
+                    commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    imagetag = "${commitHash}-${branchName}"
+                    docker_image = "${DOCKER_REPO}:${imagetag}"
+                    echo "Generated Docker image: ${docker_image}"
+
                     // Build the Docker image with two tags (commit hash and branch name)
-                    sh "echo ${docker_image}"
+
                     sh "sudo docker build -t '${docker_image}' ."       
                 }  
             }
@@ -42,7 +45,9 @@ pipeline {
         stage('Push docker image') {
             steps {
                 script {
-                    // push the Docker image
+                    // pushing the Docker image
+                    echo "Pushing Docker image: ${docker_image}"
+
                     sh "sudo docker push '${docker_image}'"
                 }
             }
