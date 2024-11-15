@@ -14,7 +14,7 @@ pipeline {
                 script { 
                     echo "Current Workspace: ${pwd()}"
                     // Clone the GitHub repository to user AMZATH0320 Public repo
-                    git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'
+                    git branch: 'main', url: 'https://github.com/AMZATH0320/task2.git'
                 }
             }    
         }
