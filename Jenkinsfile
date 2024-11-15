@@ -6,7 +6,7 @@ pipeline {
         DOCKER_REPO = 'amzath0304/task' 
         commitHash = "sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()"
         branchName = "sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()"
-        docker_image = ${DOCKER_REPO}:${commitHash}-${branchName}
+        docker_image = "${DOCKER_REPO}:${commitHash}-${branchName}"
 
     }
 
