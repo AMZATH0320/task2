@@ -1,9 +1,11 @@
 pipeline {
+    
+    //label here slave node_id 
     agent any      
-
     
     environment {
-         DOCKER_REPO = 'amzath0304/task'    
+         DOCKER_REPO = 'amzath0304/task' 
+
     }
 
     stages {
@@ -12,7 +14,7 @@ pipeline {
                 script {
                     
                     echo "Current Workspace: ${pwd()}"
-                    // Clonei the GitHub repository
+                    // Clone the GitHub repository to user AMZATH0320 Public repo
                     git branch: 'master', url: 'https://github.com/AMZATH0320/task.git'
                 }
             }    
@@ -28,6 +30,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                  
                    // Get the branch name of the latest commit
                     def branchName = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
 
@@ -50,10 +53,7 @@ pipeline {
                     // Build the Docker image with two tags (commit hash and branch name)
                     echo "Building Docker image with tags: ${imageName}, ${imageTag}"
                     sh "sudo docker build -t ${imageName}-${imageTag} ."
-
-
                     
-
                    
                 }  
             }
@@ -70,7 +70,7 @@ pipeline {
                     def imageTag = "${branchName}"
 
                     // Push the images to Docker Hub
-                    echo "Pushing Docker images to Docker Hub with tags: ${imageName}, ${imageTag}"
+                    echo "Pushing Docker images to Docker Hub with tags: ${imageName}-${imageTag}"
                     sh "sudo docker push ${imageName}-${imageTag}"
                 }
             }
